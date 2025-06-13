@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظم التشغيل: مقدمة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /*
+        * CSS Variables (Colors, Gradients)
+        */
+        :root {
+            --dark-bg-color: #1a1a2e; /* Deep dark blue/purple */
+            --card-bg-color: #16213e; /* Slightly lighter dark for cards */
+            --neon-blue: #00ffff; /* Bright Cyan Neon */
+            --neon-purple: #ff00ff; /* Bright Magenta Neon */
+            --text-light: #e0e0e0; /* Light grey for body text */
+            --heading-color: #8affff; /* Lighter cyan for headings */
+            --accent-color: #e600e6; /* Brighter magenta accent */
+            --gradient-1: linear-gradient(135deg, #00ffff, #ff00ff); /* Cyan to Magenta */
+            --gradient-2: linear-gradient(135deg, #ff00ff, #00ffff); /* Magenta to Cyan */
+            --lighter-text-color: #d6eaff; /* Very light blue for better contrast */
+        }
+
+        /*
+        * Base Body & Typography
+        */
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--dark-bg-color);
+            color: var(--lighter-text-color);
+            margin: 0;
+            padding-top: 80px; /* Space for fixed header - Adjusted by JS later */
+            direction: rtl; /* Right-to-left for Arabic */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            line-height: 1.8;
+            box-sizing: border-box; /* Ensures padding and border are included in element's total width and height */
+        }
+
+        .neon-text {
+            color: var(--neon-blue);
+            text-shadow: 0 0 8px var(--neon-blue), 0 0 15px var(--neon-blue), 0 0 25px var(--neon-purple);
+            animation: flicker 2s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; text-shadow: 0 0 8px var(--neon-blue), 0 0 15px var(--neon-blue), 0 0 25px var(--neon-purple); }
+            20%, 24%, 55% { opacity: 0.9; text-shadow: none; }
+        }
+
+        /*
+        * Header Styling
+        */
+        header {
+            background: rgba(22, 33, 62, 0.95);
+            color: var(--text-light);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            box-sizing: border-box;
+            border-bottom: 3px solid;
+            border-image: var(--gradient-1) 1;
+        }
+
+        .logo {
+            font-size: 3.5em;
+            font-weight: bold;
+            letter-spacing: 3px;
+            cursor: pointer;
+            animation: neon-glow-logo 3s infinite alternate;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        @keyframes neon-glow-logo {
+            0% { text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-purple); }
+            50% { text-shadow: 0 0 20px var(--neon-purple), 0 0 30px var(--neon-blue), 0 0 40px var(--accent-color); }
+            100% { text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-purple); }
+        }
+
+        /*
+        * Hamburger Menu Toggle Button
+        */
+        .menu-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 35px; /* Wider button */
+            height: 30px; /* Taller button */
+            transition: all 0.3s ease;
+            position: relative; /* Positioning for layering */
+            z-index: 1001; /* Ensure button is above menu */
+        }
+
+        .menu-toggle .bar {
+            width: 100%;
+            height: 3px;
+            background-color: white;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        /* Animation for close button (X) */
+        .menu-toggle.active .bar:nth-child(1) {
+            transform: translateY(10px) rotate(45deg); /* Adjusted for 30px height */
+        }
+        .menu-toggle.active .bar:nth-child(2) {
+            opacity: 0;
+        }
+        .menu-toggle.active .bar:nth-child(3) {
+            transform: translateY(-10px) rotate(-45deg); /* Adjusted for 30px height */
+        }
+
+        /*
+        * Navigation Menu Styling
+        */
+        nav {
+            position: static; /* Default for larger screens */
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex; /* Default: horizontal on large screens */
+            flex-wrap: wrap;
+            justify-content: flex-end; /* Align to right for RTL */
+            transition: all 0.4s ease;
+        }
+
+        nav ul li {
+            margin-right: 25px;
+            margin-bottom: 0; /* Remove margin-bottom for horizontal layout */
+        }
+
+        nav ul li:last-child {
+            margin-right: 0;
+        }
+
+        nav ul li a {
+            color: var(--lighter-text-color);
+            text-decoration: none;
+            font-size: 1.2em;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: background-color 0.4s ease, color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            background: var(--card-bg-color);
+            border: 2px solid transparent;
+            border-image: var(--gradient-1) 1;
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+            text-shadow: 0 0 5px var(--neon-blue);
+            display: inline-block; /* Ensure button behaves correctly with padding */
+            box-sizing: border-box;
+        }
+
+        nav ul li a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-2);
+            z-index: -1;
+            transition: transform 0.6s ease;
+            transform: scaleX(0);
+            transform-origin: right;
+        }
+
+        nav ul li a:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        nav ul li a:hover {
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px var(--neon-blue), 0 0 30px var(--neon-purple);
+            text-shadow: 0 0 8px white;
+        }
+
+        /*
+        * Hero Section
+        */
+        .hero {
+            position: relative;
+            min-height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            text-align: center;
+            overflow: hidden;
+            background: radial-gradient(circle at center, var(--card-bg-color) 0%, var(--dark-bg-color) 70%);
+            border-bottom: 5px solid;
+            border-image: var(--gradient-1) 1;
+            padding: 50px 20px;
+            box-sizing: border-box;
+        }
+
+        .hero-bg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('images/اي او اس.jpg2.jpg') no-repeat center center/cover;
+            opacity: 0.3;
+            z-index: 1;
+            filter: blur(5px);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            padding: 20px;
+            animation: fadeIn 2s ease-out;
+            max-width: 900px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero h1 {
+            font-size: 4.5em;
+            margin-bottom: 20px;
+            color: var(--heading-color);
+            text-shadow: 0 0 15px var(--neon-blue), 0 0 25px var(--neon-purple);
+            word-break: break-word;
+        }
+
+        .hero p {
+            font-size: 1.5em;
+            max-width: 800px;
+            margin: 0 auto 40px auto;
+            color: var(--lighter-text-color);
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+        }
+
+        .cta-button {
+            background: var(--gradient-1);
+            color: white;
+            padding: 18px 40px;
+            text-decoration: none;
+            font-size: 1.4em;
+            border-radius: 50px;
+            box-shadow: 0 0 15px var(--neon-blue), 0 0 25px var(--neon-purple);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            display: inline-block;
+            box-sizing: border-box;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: skewX(-20deg);
+            transition: all 0.6s ease;
+            z-index: -1;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 0 25px var(--neon-blue), 0 0 40px var(--neon-purple);
+            text-shadow: 0 0 10px white;
+        }
+
+        /*
+        * Container & Section Cards
+        */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .sections-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 40px 0;
+        }
+
+        .section-card {
+            background-color: var(--card-bg-color);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+            border: 3px solid transparent;
+            border-image: var(--gradient-1) 1;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.6s ease;
+            position: relative;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: var(--gradient-1);
+            filter: blur(50px);
+            opacity: 0.15;
+            animation: rotate-glow 12s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes rotate-glow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .section-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 0 30px var(--neon-blue), 0 0 50px var(--neon-purple);
+        }
+
+        .section-card h2 {
+            color: var(--heading-color);
+            font-size: 2em;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 10px var(--neon-blue);
+            word-break: break-word;
+        }
+
+        .section-card p {
+            font-size: 1.1em;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+            color: var(--lighter-text-color);
+        }
+
+        .section-card .read-more {
+            display: inline-block;
+            background: var(--gradient-2);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+            position: relative;
+            z-index: 1;
+            box-sizing: border-box;
+        }
+
+        .section-card .read-more:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px var(--neon-blue), 0 0 25px var(--neon-purple);
+        }
+
+        /*
+        * Content Section (for individual pages)
+        */
+        .content-section table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            background-color: var(--card-bg-color);
+            border-radius: 10px;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        .content-section table th,
+        .content-section table td {
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            padding: 12px;
+            text-align: right;
+            color: var(--lighter-text-color);
+            box-sizing: border-box;
+        }
+        .content-section table th {
+            background-color: rgba(0, 255, 255, 0.1);
+            font-weight: bold;
+            color: var(--heading-color);
+            text-shadow: 0 0 5px var(--neon-blue);
+        }
+        .content-section table tr:nth-child(even) {
+            background-color: rgba(255, 0, 255, 0.05);
+        }
+        .content-section table tr:hover {
+            background-color: rgba(0, 255, 255, 0.15);
+        }
+        .content-section ul, .content-section ol {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .content-section ul li, .content-section ol li {
+            position: relative;
+            padding-right: 25px;
+            margin-bottom: 10px;
+            color: var(--lighter-text-color);
+        }
+        .content-section ul li::before, .content-section ol li::before {
+            content: '\2022';
+            color: var(--neon-blue);
+            font-size: 1.5em;
+            position: absolute;
+            right: 0;
+            top: -2px;
+            text-shadow: 0 0 5px var(--neon-blue);
+        }
+        .content-section h2, .content-section h3 {
+            color: var(--heading-color);
+            text-shadow: 0 0 10px var(--neon-blue);
+            margin-top: 40px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid;
+            border-image: var(--gradient-1) 1;
+            padding-bottom: 10px;
+            word-break: break-word;
+        }
+        .content-section p {
+            margin-bottom: 15px;
+            color: var(--lighter-text-color);
+        }
+        .content-section .section-card {
+            margin-bottom: 30px;
+        }
+        .content-section {
+            background-color: var(--card-bg-color);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+            border: 3px solid transparent;
+            border-image: var(--gradient-1) 1;
+            margin-top: 50px;
+            position: relative;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: var(--gradient-1);
+            filter: blur(50px);
+            opacity: 0.15;
+            animation: rotate-glow 12s linear infinite;
+            z-index: 0;
+        }
+        .content-section h2, .content-section h3, .content-section p, .content-section ul, .content-section table, .content-section ol {
+            position: relative;
+            z-index: 1;
+        }
+
+        /*
+        * PDF Section
+        */
+        .main-pdf-section {
+            background-color: var(--card-bg-color);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+            border: 3px solid transparent;
+            border-image: var(--gradient-1) 1;
+            margin-top: 50px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .main-pdf-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: var(--gradient-1);
+            filter: blur(50px);
+            opacity: 0.1;
+            animation: rotate-glow 10s linear infinite reverse;
+            z-index: 0;
+        }
+
+        .main-pdf-section h2 {
+            color: var(--heading-color);
+            font-size: 2.5em;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 10px var(--neon-blue);
+            word-break: break-word;
+        }
+
+        .main-pdf-section p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+            color: var(--lighter-text-color);
+        }
+
+        .download-button {
+            background: var(--gradient-2);
+            color: white;
+            padding: 15px 35px;
+            text-decoration: none;
+            font-size: 1.2em;
+            border-radius: 30px;
+            box-shadow: 0 0 10px var(--neon-purple), 0 0 20px var(--neon-blue);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            display: inline-block;
+            box-sizing: border-box;
+        }
+
+        .download-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: skewX(-20deg);
+            transition: all 0.6s ease;
+            z-index: -1;
+        }
+
+        .download-button:hover::before {
+            left: 100%;
+        }
+
+        .download-button:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 0 20px var(--neon-purple), 0 0 30px var(--neon-blue);
+            text-shadow: 0 0 8px white;
+        }
+
+        /*
+        * Navigation Buttons
+        */
+        .navigation-buttons {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 40px;
+            padding: 20px 0;
+            border-top: 2px solid rgba(0, 255, 255, 0.2);
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .navigation-buttons .nav-button {
+            flex: 0 1 auto;
+            background: var(--card-bg-color);
+            color: var(--lighter-text-color);
+            padding: 15px 25px;
+            border: 2px solid transparent;
+            border-image: var(--gradient-1) 1;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1.1em;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+            min-width: 150px;
+            box-sizing: border-box;
+        }
+
+        .navigation-buttons .nav-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px var(--neon-blue), 0 0 30px var(--neon-purple);
+            color: white;
+        }
+
+        .navigation-buttons .nav-button.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+            box-shadow: none;
+            transform: none;
+        }
+            
+        /*
+        * Responsive Adjustments
+        */
+        @media (max-width: 992px) {
+            .logo {
+                font-size: 3em;
+            }
+            nav ul li {
+                margin-right: 15px;
+            }
+            nav ul li a {
+                font-size: 1.1em;
+                padding: 8px 15px;
+            }
+            .hero h1 {
+                font-size: 3.5em;
+            }
+            .hero p {
+                font-size: 1.3em;
+            }
+            .cta-button {
+                font-size: 1.2em;
+                padding: 15px 30px;
+            }
+            .container, .content-section, .main-pdf-section {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: row; /* Keep logo and toggle on same row */
+                justify-content: space-between; /* Space them out */
+                padding: 15px 25px; /* Adjusted padding */
+                padding-top: 15px; /* Reset padding-top from desktop */
+                height: 80px; /* Fixed height for header */
+            }
+
+            .logo {
+                margin-bottom: 0; /* Remove margin-bottom */
+                align-self: auto; /* Reset alignment */
+                font-size: 2.8em; /* Slightly smaller logo */
+            }
+
+            .menu-toggle {
+                display: flex; /* Show hamburger button */
+            }
+
+            nav {
+                position: fixed;
+                top: 0; /* Align to top of viewport */
+                right: -100%; /* Hide off-screen to the right */
+                width: 280px; /* Width of the side menu */
+                height: 100%;
+                background-color: var(--card-bg-color); /* Background for the side menu */
+                box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5);
+                transition: right 0.4s ease-out; /* Smooth slide-in transition */
+                z-index: 999; /* Below header, above content */
+                display: flex; /* Flex container for vertical menu */
+                flex-direction: column;
+                padding-top: 90px; /* Space for top of menu, below header if it overlaps */
+                box-sizing: border-box;
+            }
+
+            nav.active {
+                right: 0; /* Slide in when active */
+            }
+
+            nav ul {
+                flex-direction: column; /* Stack menu items vertically */
+                width: 100%;
+                justify-content: flex-start; /* Align items to start */
+                align-items: flex-end; /* Align links to the right within the menu */
+                padding: 20px 0; /* Padding inside the side menu */
+            }
+
+            nav ul li {
+                margin-right: 0; /* Remove horizontal margin */
+                margin-bottom: 10px; /* Space between vertical items */
+                width: 100%; /* Full width for each menu item */
+                text-align: right; /* Align text within list item */
+            }
+            nav ul li:last-child {
+                margin-bottom: 0;
+            }
+
+            nav ul li a {
+                padding: 15px 25px; /* Larger clickable area for menu items */
+                font-size: 1.3em; /* Larger font size for readability */
+                border: none; /* Remove border from links in side menu */
+                border-radius: 0; /* Remove border radius */
+                background: transparent; /* Remove background */
+                box-shadow: none; /* Remove shadow */
+                text-shadow: none; /* Remove text shadow */
+                width: 100%; /* Ensure link takes full width of li */
+            }
+
+            nav ul li a:hover,
+            nav ul li a:focus {
+                background-color: rgba(0, 255, 255, 0.1); /* Hover effect for side menu items */
+                color: var(--neon-blue);
+                transform: translateX(-5px); /* Slight slide on hover */
+                box-shadow: none;
+                text-shadow: 0 0 5px var(--neon-blue);
+            }
+            nav ul li a::before {
+                display: none; /* Hide hover effect for side menu links */
+            }
+
+            body {
+                padding-top: 80px; /* Keep standard padding for fixed header */
+            }
+
+            .hero {
+                min-height: 350px;
+                padding: 30px 15px;
+            }
+            .hero h1 {
+                font-size: 2.5em;
+            }
+            .hero p {
+                font-size: 1em;
+            }
+            .sections-overview {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .content-section, .section-card, .main-pdf-section {
+                padding: 25px;
+            }
+            .section-card h2 {
+                font-size: 1.7em;
+            }
+            .section-card p {
+                font-size: 1em;
+            }
+            .main-pdf-section h2 {
+                font-size: 2em;
+            }
+            .main-pdf-section p {
+                font-size: 1.1em;
+            }
+            .download-button {
+                font-size: 1em;
+                padding: 12px 25px;
+            }
+            .navigation-buttons {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 15px 0;
+            }
+            .navigation-buttons .nav-button {
+                margin-bottom: 10px;
+                min-width: unset;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 2em;
+            }
+            .menu-toggle {
+                width: 30px;
+                height: 25px;
+            }
+            .menu-toggle.active .bar:nth-child(1) {
+                transform: translateY(9px) rotate(45deg);
+            }
+            .menu-toggle.active .bar:nth-child(3) {
+                transform: translateY(-9px) rotate(-45deg);
+            }
+            nav {
+                width: 250px; /* Slightly smaller side menu for very small screens */
+                padding-top: 70px;
+            }
+            nav ul li a {
+                padding: 12px 20px;
+                font-size: 1.1em;
+            }
+            .hero h1 {
+                font-size: 1.8em;
+            }
+            .hero p {
+                font-size: 0.9em;
+            }
+            .cta-button {
+                font-size: 0.9em;
+                padding: 10px 20px;
+            }
+            .content-section, .section-card, .main-pdf-section {
+                padding: 20px;
+            }
+            .download-button {
+                font-size: 0.9em;
+                padding: 10px 20px;
+            }
+            .navigation-buttons .nav-button {
+                padding: 10px 15px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="#" class="logo">Æ</a>
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle Navigation">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+        <nav id="mainNav">
+            <ul>
+                <li><a href="index.html" class="neon-text">الرئيسية</a></li>
+                <li><a href="sections.html" class="neon-text">السكاشن</a></li>
+                <li><a href="components.html" class="neon-text">المكونات</a></li>
+                <li><a href="questions.html" class="neon-text">الأسئلة</a></li>
+                <li><a href="comparisons.html" class="neon-text">المقارنات</a></li>
+                <li><a href="challenges.html" class="neon-text">التحديات</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-bg-overlay"></div>
+            <div class="hero-content">
+                <h1 class="neon-text">نظم التشغيل للأجهزة الذكية</h1>
+                <p>دليل شامل حول تطور، أنواع، وأفضل الخيارات لأنظمة التشغيل لتلبية احتياجاتك التقنية المتغيرة.</p>
+                <a href="sections.html" class="cta-button">ابدأ التعلم</a>
+            </div>
+        </section>
+
+        <section class="container">
+            <div class="content-section">
+                <h1 class="neon-text" style="text-align: center; margin-bottom: 40px; font-size: 2.5em;">نظم التشغيل: مقدمة شاملة</h1>
+
+                <h2>1. مقدمة</h2>
+                <p>تعد أنظمة التشغيل العمود الفقري للحوسبة الحديثة، حيث تدير موارد الأجهزة وتوفر بيئة تشغيلية للمستخدمين والتطبيقات. مع تطور التكنولوجيا، أصبحت أنظمة التشغيل أكثر تقدمًا، مدعومةً بالذكاء الاصطناعي وإنترنت الأشياء، مما يوسع إمكانيات التفاعل مع الأجهزة.</p>
+
+                <h2>2. تعريف نظام التشغيل</h2>
+                <p>هو البرنامج الأساسي الذي يدير مكونات الحاسوب المادية (المعالج، الذاكرة، الأجهزة الطرفية) والبرمجية، ويتحكم في تنفيذ العمليات وتخصيص الموارد.</p>
+
+                <h2>3. تاريخ تطور أنظمة التشغيل</h2>
+                <ul>
+                    <li>**الجيل الأول (1950s):** أنظمة بدائية تعتمد على البطاقات المثقوبة.</li>
+                    <li>**الجيل الثاني (1960s):** ظهور أنظمة متعددة البرمجة.</li>
+                    <li>**الجيل الثالث (1970s):** دعم واجهات المستخدم الرسومية وتعدد المستخدمين.</li>
+                    <li>**الجيل الرابع (1980s - الآن):** دعم الشبكات، الإنترنت، والأمان المتقدم.</li>
+                </ul>
+
+                <h2>4. أنواع أنظمة التشغيل</h2>
+                <h3>المكتبية:</h3>
+                <ul>
+                    <li>**ويندوز (Windows):** الأكثر انتشارًا، مناسب للألعاب والتطبيقات.</li>
+                    <li>**ماك أو إس (macOS):** مصمم لأجهزة أبل، يتميز بالأمان والاستقرار.</li>
+                    <li>**لينكس (Linux):** مفتوح المصدر، قابل للتخصيص، يستخدم في الخوادم.</li>
+                </ul>
+
+                <h3>المحمولة:</h3>
+                <ul>
+                    <li>**أندرويد (Android):** الأكثر شيوعًا في الهواتف، مفتوح المصدر.</li>
+                    <li>**آي أو إس (iOS):** خاص بأجهزة أبل، آمن وسلس.</li>
+                </ul>
+
+                <h3>المدمجة:</h3>
+                <ul>
+                    <li>**ويندوز إمبيدد (Windows Embedded):** للأجهزة الذكية والصناعية.</li>
+                    <li>**لينكس إمبيدد (Linux Embedded):** خفيف وقابل للتخصيص.</li>
+                </ul>
+
+                <h3>الزمن الحقيقي (Real-Time OS):</h3>
+                <ul>
+                    <li>**VxWorks, RTLinux:** تستخدم في الأنظمة الحرجة مثل الطيران والطب.</li>
+                </ul>
+
+                <h2>مكونات نظام التشغيل</h2>
+                <ol>
+                    <li>**النواة (Kernel):**
+                        <ul>
+                            <li>الجزء الأساسي في نظام التشغيل.</li>
+                            <li>مسؤول عن إدارة المعالج، الذاكرة، أجهزة الإدخال/الإخراج، وجدولة العمليات.</li>
+                            <li>يعالج المقاطعات ويستدعي البرامج الضرورية للتنفيذ.</li>
+                        </ul>
+                    </li>
+                    <li>**الغلاف (Shell):**
+                        <ul>
+                            <li>واجهة بين المستخدم ونظام التشغيل.</li>
+                            <li>يتيح تنفيذ الأوامر عبر واجهة نصية أو رسومية.</li>
+                        </ul>
+                    </li>
+                    <li>**واجهة المستخدم (User Interface):**
+                        <ul>
+                            <li>تُمكّن المستخدم من التفاعل مع الجهاز.</li>
+                            <li>نوعان: رسومية (GUI) ونصية (CLI).</li>
+                        </ul>
+                    </li>
+                    <li>**إدارة الملفات (File System):**
+                        <ul>
+                            <li>تنظم تخزين البيانات على وسائط التخزين.</li>
+                            <li>أنظمة شهيرة: NTFS (ويندوز)، APFS (ماك)، Ext4 (لينكس).</li>
+                        </ul>
+                    </li>
+                    <li>**إدارة الموارد (Resource Management):**
+                        <ul>
+                            <li>تخصيص المعالج والذاكرة للتطبيقات المختلفة بكفاءة.</li>
+                        </ul>
+                    </li>
+                    <li>**إدارة العمليات (Process Management):**
+                        <ul>
+                            <li>تنظيم تشغيل البرامج وتخصيص الموارد ومتابعة المهام.</li>
+                        </ul>
+                    </li>
+                    <li>**إدارة الشبكات (Network Management):**
+                        <ul>
+                            <li>تتحكم في الاتصال بالشبكات وتبادل البيانات.</li>
+                        </ul>
+                    </li>
+                    <li>**إدارة الذاكرة الرئيسية (Main Memory):**
+                        <ul>
+                            <li>تتعقب استخدام وتخصيص الذاكرة أثناء التشغيل.</li>
+                        </ul>
+                    </li>
+                    <li>**إدارة التخزين الثانوي (Storage):**
+                        <ul>
+                            <li>تنظيم وتنسيق البيانات على الأقراص الصلبة.</li>
+                        </ul>
+                    </li>
+                    <li>**إدارة أجهزة الإدخال/الإخراج (I/O Device Management):**
+                        <ul>
+                            <li>التحكم في تشغيل الأجهزة مثل الطابعات والفأرة.</li>
+                        </ul>
+                    </li>
+                    <li>**إدارة الأمان (Security Management):**
+                        <ul>
+                            <li>حماية النظام من التهديدات ومراقبة صلاحيات الوصول.</li>
+                        </ul>
+                    </li>
+                    <li>**مُفسر الأوامر (Command Interpreter):**
+                        <ul>
+                            <li>يستقبل أوامر المستخدم ويحولها لتعليمات قابلة للتنفيذ.</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <h2>كيف يعمل نظام التشغيل؟</h2>
+                <ol>
+                    <li>**عملية الإقلاع (Booting):**
+                        <ul>
+                            <li>يبدأ تشغيل BIOS/UEFI.</li>
+                            <li>يتم تحميل النواة (Kernel) إلى الذاكرة.</li>
+                        </ul>
+                    </li>
+                    <li>**تشغيل الخدمات الأساسية:**
+                        <ul>
+                            <li>مثل الشبكة والتخزين والتعرف على الأجهزة.</li>
+                        </ul>
+                    </li>
+                    <li>**إدارة العمليات:**
+                        <ul>
+                            <li>كل برنامج يُفتح يُدار كعملية مستقلة مع تخصيص موارد خاصة.</li>
+                        </ul>
+                    </li>
+                    <li>**التعامل مع الأجهزة:**
+                        <ul>
+                            <li>باستخدام تعريفات (Drivers) للتحكم في الأجهزة المتصلة.</li>
+                        </ul>
+                    </li>
+                    <li>**إدارة الذاكرة:**
+                        <ul>
+                            <li>تخصيص ذكي للذاكرة، مع استخدام التخزين المؤقت والتفريغ عند الحاجة.</li>
+                        </ul>
+                    </li>
+                    <li>**إدارة التخزين:**
+                        <ul>
+                            <li>تنظيم الملفات وضمان سلامتها على الأقراص.</li>
+                        </ul>
+                    </li>
+                    <li>**استدعاءات النظام (System Calls):**
+                        <ul>
+                            <li>التطبيقات تستخدم نداءات لتنفيذ أوامر معينة.</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+            <div class="main-pdf-section">
+                <h2>حمّل الدليل الشامل لأنظمة التشغيل</h2>
+                <p>احصل على نسختك المجانية من دليلنا المفصل حول أنظمة التشغيل، واكتشف كل ما تحتاج لمعرفته من أساسياتها إلى أحدث التطورات.</p>
+                <a href="#" class="download-button">تحميل الدليل (PDF)</a>
+            </div>
+
+            <div class="navigation-buttons">
+                <a href="#" class="nav-button disabled">السابق</a>
+                <a href="#" class="nav-button">الصفحة الرئيسية</a>
+                <a href="#" class="nav-button">التالي</a>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const mainNav = document.getElementById('mainNav'); // تم تغيير المعرف ليتطابق مع الـ <nav>
+
+        menuToggle.addEventListener('click', function() {
+            mainNav.classList.toggle('active');
+            menuToggle.classList.toggle('active'); // لتغيير أيقونة الهامبرغر إلى X
+            document.body.classList.toggle('no-scroll'); // منع التمرير عند فتح القائمة (اختياري)
+        });
+
+        // إغلاق القائمة عند النقر خارجها أو عند النقر على رابط داخلها
+        document.addEventListener('click', function(event) {
+            // تحقق إذا كان النقر ليس على زر التبديل ولا داخل القائمة
+            if (!mainNav.contains(event.target) && !menuToggle.contains(event.target)) {
+                if (mainNav.classList.contains('active')) {
+                    mainNav.classList.remove('active');
+                    menuToggle.classList.remove('active');
+                    document.body.classList.remove('no-scroll'); // إزالة منع التمرير
+                }
+            }
+        });
+
+        // إغلاق القائمة عند النقر على أي رابط داخلها (لتحسين تجربة الجوال)
+        mainNav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (mainNav.classList.contains('active')) {
+                    mainNav.classList.remove('active');
+                    menuToggle.classList.remove('active');
+                    document.body.classList.remove('no-scroll'); // إزالة منع التمرير
+                }
+            });
+        });
+
+        // اختياري: منع التمرير عند فتح القائمة على الأجهزة المحمولة
+        // أضف هذا الكلاس في الـ CSS إذا كنت تريد هذه الميزة:
+        // body.no-scroll { overflow: hidden; }
+    </script>
+
+</body>
+</html>
